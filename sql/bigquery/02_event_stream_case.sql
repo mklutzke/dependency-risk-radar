@@ -66,17 +66,16 @@ ORDER BY month;
 
 
 -- C) Membership changes, with payload, for the days found in A
---    Replace the day list with the days of MemberEvents you saw in A.
---    One day table with payload is a few GB.
+--    A showed one MemberEvent: dominictarr, 2018-09-04 05:07 UTC.
+--    This confirms who was added. One day table with payload is a few GB.
 SELECT
   created_at,
   actor.login                                        AS actor,
   type,
   JSON_VALUE(payload, '$.action')                    AS action,
   JSON_VALUE(payload, '$.member.login')              AS member
-FROM `githubarchive.day.*`
-WHERE _TABLE_SUFFIX IN ('20180909')        -- <-- edit after running A
-  AND repo.name = 'dominictarr/event-stream'
+FROM `githubarchive.day.20180904`          -- day of the MemberEvent found in A
+WHERE repo.name = 'dominictarr/event-stream'
   AND type = 'MemberEvent';
 
 

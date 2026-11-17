@@ -103,3 +103,25 @@ FROM adv
 JOIN `YOUR_PROJECT.drr.npm_packages` np USING (package)
 GROUP BY year
 ORDER BY year;
+
+
+-- C2) Outlier check: what are 2026's advisories? (C showed ~2,000 in 2026
+--     vs ~170 a year in 2018-2024.) Groups by source and ID prefix,
+--     e.g. GHSA = GitHub advisory, MAL = malicious-package report.
+WITH adv AS (
+  SELECT a.Source, a.SourceID, a.Disclosed, p.Name AS package
+  FROM `bigquery-public-data.deps_dev_v1.Advisories` AS a,
+       UNNEST(a.Packages) AS p
+  WHERE a.SnapshotAt = snap
+    AND p.System = 'NPM'
+)
+SELECT
+  Source,
+  REGEXP_EXTRACT(SourceID, r'^[A-Za-z]+')  AS id_prefix,
+  COUNT(DISTINCT SourceID)                 AS advisories,
+  COUNT(DISTINCT adv.package)              AS packages_hit
+FROM adv
+JOIN `YOUR_PROJECT.drr.npm_packages` np USING (package)
+WHERE EXTRACT(YEAR FROM Disclosed) = 2026
+GROUP BY Source, id_prefix
+ORDER BY advisories DESC;
