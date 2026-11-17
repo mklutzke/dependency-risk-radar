@@ -1,0 +1,26 @@
+# data and outputs (document sources in README instead)
+data/
+*.parquet
+*.json.gz
+
+# secrets
+.env
+.env.*
+*service-account*.json
+*credentials*.json
+*.pem
+*.key
+
+# python / notebooks
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+~$*.pptx

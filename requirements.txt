@@ -1,0 +1,6 @@
+requests
+pandas
+matplotlib
+duckdb
+google-cloud-bigquery
+db-dtypes
